@@ -38,12 +38,27 @@ function GameCallback_OnGameStart()
 	InstallS5Hook()
 	SW.SV.Init()
 	InitDebug()
+	InitDiplomacy()
 	FirstMapAction()
 end
 
+function InitDiplomacy()
+	Logic.SetPlayerRawName( 5, "Banditen")
+	Logic.SetPlayerRawName( 7, "Hodenkobolde")
+	Logic.SetPlayerRawName( 8, "Bevölkerung")
+	for i = 1, 4 do
+		SetHostile( i, 7)
+		SetHostile( i, 5)
+		SetFriendly( i, 8)
+	end
+end
 function FirstMapAction()
 	Camera.ZoomSetFactorMax(2)
 	SetupFreeHQBuild()
+	WarriorArmy.Init()
+	SW.SetAttractionPlaceProvided( Entities.PB_Headquarters1, 75)
+	SW.SetAttractionPlaceProvided( Entities.PB_Headquarters2, 100)
+	SW.SetAttractionPlaceProvided( Entities.PB_Headquarters3, 125)
 	CreateInitialBandits()
 	if XNetwork.Manager_DoesExist() == 1 then
 		for i = 1, 4 do
@@ -67,6 +82,7 @@ function InitDebug()
 	for i = 1, 4 do
 		Logic.SetEntityExplorationRange( Logic.CreateEntity(Entities.XD_ScriptEntity, 1, 1, 0, i), 70000)
 		Tools.GiveResouces( i, g, g, g, g, g, g)
+		ResearchAllUniversityTechnologies( i)
 	end
 end
 
@@ -108,10 +124,11 @@ function SetupFreeHQBuild()
 	GUIAction_PlaceBuilding = function( _uc)
 		if _uc == UpgradeCategories.Outpost then
 			_uc = UpgradeCategories.Headquarters 
-		end
-		if HasPlayerHQs(GUI.GetPlayerID()) then
-			Message("Ihr könnt höchstens ein Hauptquartier haben.")
-			return
+			if HasPlayerHQs(GUI.GetPlayerID()) then
+				Message("Ihr könnt höchstens ein Hauptquartier haben.")
+				Sound.PlayGUISound( Sounds.VoicesMentor_MP_TauntNo, 0)
+				return
+			end
 		end
 		FreeHQ_GUIAction_PlaceBuilding( _uc)
 	end
@@ -141,3 +158,9 @@ function HasPlayerHQs( _pId)
 		return false
 	end
 end
+
+
+
+
+
+

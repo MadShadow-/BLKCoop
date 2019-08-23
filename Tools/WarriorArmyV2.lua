@@ -473,9 +473,43 @@ function WarriorArmy:GetThreatLevel( _eId)
 		return 100
 	end
 	local val = self.ThreatLevels[Logic.GetEntityType(_eId)]
-	if val ~= 0 then return val end
+	if val ~= nil then return val end
 	return 50
 end
+
+function WarriorArmy:GetThreatsInArea( _pos, _range, _pId)
+	local enemies = {}
+	for i = 1, 8 do
+		if Logic.GetDiplomacyState( i, _pId) == Diplomacy.Hostile then
+			local j = i
+			table.insert( enemies, j)
+		end
+	end
+	local threats = S5Hook.EntityIteratorTableize( Predicate.InCircle(_pos.X, _pos.Y, _range), Predicate.OfAnyPlayer(unpack(enemies)))
+	for i = table.getn(threats), -1, 1 do
+		if IsDead( threats[i]) then
+			table.remove( threats, i)
+		end
+	end
+	return threats
+end
+function WarriorArmy:GetHeroesInArea( _pos, _range, _pId)	--Gibt nur LEBENDE Helden zurück
+	local enemies = {}
+	for i = 1, 8 do
+		if Logic.GetDiplomacyState( i, _pId) == Diplomacy.Hostile then
+			local j = i
+			table.insert( enemies, j)
+		end
+	end
+	local heroes = S5Hook.EntityIteratorTableize( Predicate.InCircle(_pos.X, _pos.Y, _range), Predicate.OfCategory( EntityCategories.Hero), Predicate.OfAnyPlayer(unpack(enemies)))
+	for i = table.getn(heroes), -1, 1 do
+		if IsDead( heroes[i]) then
+			table.remove( heroes, i)
+		end
+	end
+	return heroes
+end
+
 function WarriorArmy:UpdateFormation( _army, _atHome)
 	if _atHome == nil then	--we are not at home? use line from leader to homePoint for formation
 		local lpos = GetPosition(_army.leader)

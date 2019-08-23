@@ -8,6 +8,14 @@ BANDITCAMPTROOPS = {
 	{Entities.CU_BanditLeaderBow1, 4},
 	{Entities.CU_BanditLeaderSword2, 4},
 	{Entities.CU_Barbarian_LeaderClub2, 4},
+	{Entities.CU_Barbarian_LeaderClub2, 4},
+	{Entities.CU_Barbarian_LeaderClub2, 4},
+	{Entities.CU_Barbarian_LeaderClub2, 4},
+	{Entities.CU_Barbarian_LeaderClub2, 4},
+	{Entities.CU_AggressiveWolf, 0},
+	{Entities.CU_AggressiveWolf, 0},
+	{Entities.CU_AggressiveWolf, 0},
+	{Entities.CU_AggressiveWolf, 0},
 	{Entities.CU_AggressiveWolf, 0}
 }
 function CreateInitialBandits()
@@ -22,5 +30,5 @@ function CreateSomeBanditCamp( _spawn, _home)
 	for k,v in pairs(BANDITCAMPTROOPS) do
 		WarriorArmy:AddTroop( armyId, v[1], v[2], _spawn)
 	end
-	WarriorArmy:AddController( armyId, WarriorArmyController_Defend, { id = armyId, pos = {X = _spawn.X, Y = _spawn.Y}, range = 5000})
+	WarriorArmy:AddController( armyId, WarriorArmyController_Defend, { id = armyId, pos = {X = _spawn.X, Y = _spawn.Y}, range = 50000})
 end
